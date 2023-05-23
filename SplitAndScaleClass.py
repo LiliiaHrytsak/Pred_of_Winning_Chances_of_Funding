@@ -19,12 +19,12 @@ class SplitAndScale:
 
 
     def scale_data(data, not_numerical_columns, X_train, X_test,y_train_valid):
-        numerical_columns = data.columns.drop(not_numerical_columns)
-        scaler_num = StandardScaler()
-        scaler_num.fit_transform(X_train[numerical_columns])
-        scaler_num.transform(X_test[numerical_columns])
-        scaler_cat = OneHotEncoder()
-        scaler_cat.fit_transform(X_train[not_numerical_columns])
-        scaler_cat.transform(X_test[not_numerical_columns])
-        scaler_cat.transform(y_train_valid)
+        numerical_columns = data.columns
+        #scaler_num = StandardScaler()
+        #scaler_num.fit_transform(X_train[numerical_columns])
+        #scaler_num.transform(X_test[numerical_columns])
+        #scaler_cat = OneHotEncoder()
+        #scaler_cat.fit_transform(X_train[not_numerical_columns])
+        #scaler_cat.transform(X_test[not_numerical_columns])
+        #scaler_cat.transform(y_train_valid)
         return X_train, X_test, numerical_columns

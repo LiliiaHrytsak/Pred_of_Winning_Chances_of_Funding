@@ -1,3 +1,5 @@
+from sklearn.preprocessing import StandardScaler, OneHotEncoder, LabelEncoder
+
 import Encode_labels
 from PreliminaryCleaningClass import PreliminaryCleaning
 from Encode_labels import novalide_date_flags
@@ -8,6 +10,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import SplitAndScaleClass
+import Decision_Tree_model
+
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_columns', None)
@@ -31,7 +36,28 @@ for i in update_dataset.columns:
     if i in Encode_labels.useless_atr_list:
         update_dataset.drop(i, axis=1, inplace=True)
 print(update_dataset.shape)
-print(update_dataset.sample(20))
+print(update_dataset.columns)
+
+X_train_valid, X_test_main, y_train_valid, y_test_main = \
+    SplitAndScaleClass.SplitAndScale.split_data(update_dataset,0.8,'NEWFUNDREL')
+print(X_train_valid)
+data_null_counts = update_dataset.isnull().sum()/update_dataset.shape[0]*100
+update_dataset = update_dataset.applymap(lambda x: int(x) if x.isnumeric() else x)
+print(update_dataset.info())
+numerical_columns = update_dataset.columns.drop(['NAICS2012', 'ASECB', 'YIBSZFI',
+                                    'NEWFUNDREL',  'EMP_F'])
+scaler_num = StandardScaler()
+scaler_num.fit_transform(X_train_valid[numerical_columns])
+scaler_num.transform(X_test_main[numerical_columns])
+
+"""
+print(update_dataset.columns)
+X_train, X_test, numerical_columns = SplitAndScaleClass.SplitAndScale.scale_data(update_dataset,
+                                    ['NAICS2012', 'ASECB', 'YIBSZFI',
+                                    'NEWFUNDREL',  'EMP_F'], X_train_valid, X_test_main, y_train_valid)
+"""
+best_estimator, rmse, y_pred = Decision_Tree_model.DecisionTreeModel.model_validation(X_train_valid, y_train_valid, X_test_main, y_test_main)
+finale_model, Scaler = Decision_Tree_model.DecisionTreeModel.train_model(X_train_valid, X_test_main, y_train_valid,  y_test_main,numerical_columns)
 # Press the green button in the gutter to run the script.
 
 if __name__ == '__main__':

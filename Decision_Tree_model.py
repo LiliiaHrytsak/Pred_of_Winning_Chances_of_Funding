@@ -10,6 +10,7 @@ class DecisionTreeModel:
     def __init__(self):
         pass
 
+
     @staticmethod
     def model_validation( X_train, y_train, X_test, y_test, parameters_dict={}, cv=4):
         model = tree.DecisionTreeClassifier()
