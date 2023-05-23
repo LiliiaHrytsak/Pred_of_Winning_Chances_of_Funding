@@ -57,6 +57,8 @@ class PreliminaryCleaning(object):
                 """
         new_data = data.copy()
         new_data.drop(columns=self.get_clean_list(data), inplace=True)
+        new_data.drop(index=new_data.index[0], axis=0, inplace=True)
+
         return new_data
 
 
