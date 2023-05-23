@@ -1,3 +1,4 @@
+
 suppresed_level_flags = {'S': 'Suppressed to avoid disclosing data for individual companies',
                          'W': 'Suppressed to avoid disclosing data for individual companies; '
                               'data are included in higher-level totals',
@@ -33,4 +34,10 @@ suppresed_level_flags = {'S': 'Suppressed to avoid disclosing data for individua
 novalide_date_flags = {'S': 'The Census Bureau is not reporting certain information due to'
                             ' confidentiality or data quality concerns',
                        'X': 'indicating that a particular data point is not relevant'}
-print
+def make_mask(data):
+    employeer_flags = {'a': (data["EMP"] >= 0) & (data["EMP"] < 20), 'b': (data["EMP"] >= 20) & (data["EMP"] < 100),
+             'c': (data["EMP"] >= 100) & (data["EMP"] < 250), 'e': (data["EMP"] >= 250) & (data["EMP"] < 500),
+             'f': (data["EMP"] >= 500) & (data["EMP"] < 1000), 'g': (data["EMP"] >= 1000) & (data["EMP"] < 2500),
+             'h': (data["EMP"] >= 2500) & (data["EMP"] < 5000), 'i': (data["EMP"] >= 5000) & (data["EMP"] < 10000),
+             'j': (data["EMP"] >= 10000) & (data["EMP"] < 25000), 'k': (data["EMP"] >= 25000) & (data["EMP"] < 50000),
+             'l': (data["EMP"] >= 50000) & (data["EMP"] < 100000), 'm': (data["EMP"] >= 100000)}
