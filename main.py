@@ -41,25 +41,35 @@ print(update_dataset.columns)
 X_train_valid, X_test_main, y_train_valid, y_test_main = \
     SplitAndScaleClass.SplitAndScale.split_data(update_dataset,0.8,'NEWFUNDREL')
 print(X_train_valid)
-data_null_counts = update_dataset.isnull().sum()/update_dataset.shape[0]*100
-update_dataset = update_dataset.applymap(lambda x: int(x) if x.isnumeric() else x)
+
+non_numeric_columns = []
+for column in update_dataset.columns:
+    if update_dataset[column].dtype == 'object':
+        try:
+            update_dataset[column] = update_dataset[column].astype(float)
+        except ValueError:
+            non_numeric_columns.append(column)
+
 print(update_dataset.info())
-numerical_columns = update_dataset.columns.drop(['NAICS2012', 'ASECB', 'YIBSZFI',
-                                    'NEWFUNDREL',  'EMP_F'])
+
+
+X_train, X_test = SplitAndScaleClass.SplitAndScale.scale_data(update_dataset, non_numeric_columns,
+                                     X_train_valid, X_test_main, y_train_valid)
+"""
 scaler_num = StandardScaler()
 scaler_num.fit_transform(X_train_valid[numerical_columns])
 scaler_num.transform(X_test_main[numerical_columns])
 
-"""
+
 print(update_dataset.columns)
 X_train, X_test, numerical_columns = SplitAndScaleClass.SplitAndScale.scale_data(update_dataset,
                                     ['NAICS2012', 'ASECB', 'YIBSZFI',
                                     'NEWFUNDREL',  'EMP_F'], X_train_valid, X_test_main, y_train_valid)
-"""
+
 best_estimator, rmse, y_pred = Decision_Tree_model.DecisionTreeModel.model_validation(X_train_valid, y_train_valid, X_test_main, y_test_main)
 finale_model, Scaler = Decision_Tree_model.DecisionTreeModel.train_model(X_train_valid, X_test_main, y_train_valid,  y_test_main,numerical_columns)
 # Press the green button in the gutter to run the script.
-
+"""
 if __name__ == '__main__':
     print('PyCharm')
 
